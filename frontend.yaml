@@ -17,10 +17,11 @@ spec:
       - name: frontend
         image: 972011045520.dkr.ecr.us-east-1.amazonaws.com/streaming-frontend:v0.1.0
         ports:
-        - containerPort: 3000
+        - containerPort: 80
         readinessProbe:
-          tcpSocket:
-            port: 3000
+          httpGet:
+            path: /
+            port: 80
           initialDelaySeconds: 5
           periodSeconds: 10
 ---
@@ -31,7 +32,7 @@ metadata:
   namespace: streaming
 spec:
   selector:
-    app: streaming
+    app: frontend
   ports:
-  - port: 3000
-    targetPort: 3000
+  - port: 80
+    targetPort: 80
