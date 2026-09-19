@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: streamingapp-config
+  namespace: {{ .Values.namespace }}
+data:
+  NODE_ENV: "production"
+  PORT_AUTH: "{{ .Values.services.auth.port }}"
+  PORT_STREAMING: "{{ .Values.services.streaming.port }}"
+  PORT_ADMIN: "{{ .Values.services.admin.port }}"
+  PORT_CHAT: "{{ .Values.services.chat.port }}"
+  AUTH_SERVICE_URL: "http://streamingapp-auth:{{ .Values.services.auth.port }}"
+  STREAMING_SERVICE_URL: "http://streamingapp-streaming:{{ .Values.services.streaming.port }}"

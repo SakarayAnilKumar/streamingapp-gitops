@@ -1,0 +1,30 @@
+global:
+  repositoryPrefix: "streamingapp"
+  tag: "latest"
+
+namespace: production
+
+probes:
+  enabled: false
+
+services:
+  frontend:
+    port: 80
+    targetPort: 80
+  auth:
+    port: 3000
+    targetPort: 3000
+  streaming:
+    port: 3000
+    targetPort: 3000
+  admin:
+    port: 3000
+    targetPort: 3000
+  chat:
+    port: 3000
+    targetPort: 3000
+
+ingress:
+  enabled: true
+  host: "localhost"
+  className: "nginx"

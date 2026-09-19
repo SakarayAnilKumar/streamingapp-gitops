@@ -1,0 +1,17 @@
+{{- range $name, $config := .Values.services }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: streamingapp-{{ $name }}
+  namespace: {{ $.Values.namespace }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ $config.port | default 3000 }}
+      targetPort: {{ $config.targetPort | default 3000 }}
+      protocol: TCP
+      name: http
+  selector:
+    app: streamingapp-{{ $name }}
+---
+{{- end }}

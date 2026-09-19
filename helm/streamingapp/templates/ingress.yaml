@@ -1,0 +1,47 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: streamingapp-ingress
+  namespace: {{ .Values.namespace }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: {{ .Values.ingress.className | default "nginx" }}
+  rules:
+    - host: {{ .Values.ingress.host | default "localhost" }}
+      http:
+        paths:
+          # API traffic routed to Auth service
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: streamingapp-auth
+                port:
+                  number: 3000
+          # Specific direct endpoints routed to Auth service
+          - path: /login
+            pathType: Exact
+            backend:
+              service:
+                name: streamingapp-auth
+                port:
+                  number: 3000
+          - path: /register
+            pathType: Exact
+            backend:
+              service:
+                name: streamingapp-auth
+                port:
+                  number: 3000
+          # Frontend static UI catch-all
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: streamingapp-frontend
+                port:
+                  number: 80
+{{- end }}

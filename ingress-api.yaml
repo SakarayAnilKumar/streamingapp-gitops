@@ -1,0 +1,97 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: streaming-ingress
+  namespace: streaming
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/success-codes: '200-399'
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    alb.ingress.kubernetes.io/group.name: streaming-frontend
+    alb.ingress.kubernetes.io/load-balancer-attributess: idle_timeout.timeout_seconds=60
+spec:
+  ingressClassName: alb
+  rules:
+  - http:
+      paths:
+      # - path: /api/admin
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: admin
+      #       port:
+      #         number: 3003
+      # - path: /api/chat
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: chat
+      #       port:
+      #         number: 3004
+      # - path: /api/streaming
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: streaming
+      #       port:
+      #         number: 3002
+      # - path: /api/health
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: streaming
+      #       port:
+      #         number: 3002
+      # - path: /api/register
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: auth
+      #       port:
+      #         number: 3001
+      # - path: /api/login
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: auth
+      #       port:
+      #         number: 3001
+      # - path: /api/forgetPassword
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: auth
+      #       port:
+      #         number: 3001
+      # - path: /api/verify
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: auth
+      #       port:
+      #         number: 3001
+      # - path: /socket.io
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: chat
+      #       port:
+      #         number: 3004
+      # - path: /health
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: auth
+      #       port:
+      #         number: 3001
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
