@@ -7,3 +7,6 @@ data:
   NODE_ENV: "production"
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"
+  CLIENT_URLS: "http://k8s-streamingapp-13c6fd7ed0-1760791278.us-east-1.elb.amazonaws.com"
+  STREAMING_PUBLIC_URL: "http://k8s-streamingapp-13c6fd7ed0-1760791278.us-east-1.elb.amazonaws.com"
+  AWS_CDN_URL: ""
