@@ -1,17 +1,60 @@
-{{- range $name, $config := .Values.services }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: streamingapp-{{ $name }}
-  namespace: {{ $.Values.namespace }}
+  name: auth
+  namespace: {{ .Release.Namespace }}
 spec:
-  type: ClusterIP
-  ports:
-    - port: {{ $config.port | default 3000 }}
-      targetPort: {{ $config.targetPort | default 3000 }}
-      protocol: TCP
-      name: http
   selector:
-    app: streamingapp-{{ $name }}
+    app: auth
+  ports:
+  - port: {{ .Values.services.auth.port }}
+    targetPort: {{ .Values.services.auth.port }}
 ---
-{{- end }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: streaming
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: streaming
+  ports:
+  - port: {{ .Values.services.streaming.port }}
+    targetPort: {{ .Values.services.streaming.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: admin
+  ports:
+  - port: {{ .Values.services.admin.port }}
+    targetPort: {{ .Values.services.admin.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: chat
+  ports:
+  - port: {{ .Values.services.chat.port }}
+    targetPort: {{ .Values.services.chat.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: {{ .Values.services.frontend.port }}
+    targetPort: {{ .Values.services.frontend.port }}
+    name: http

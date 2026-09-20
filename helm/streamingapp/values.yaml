@@ -1,0 +1,85 @@
+global:
+  registry: 972011045520.dkr.ecr.us-east-1.amazonaws.com
+
+config:
+  nodeEnv: "production"
+  redisHost: "redis"
+  redisPort: "6379"
+  clientUrls: "http://k8s-streamingapp-8f3ff3cb32-972865860.us-east-1.elb.amazonaws.com"
+  streamingPublicUrl: "http://k8s-streamingapp-8f3ff3cb32-972865860.us-east-1.elb.amazonaws.com"
+  awsCdnUrl: ""
+
+secrets:
+  # Set 'create' to true only if deploying in non-production environments with local values.
+  # For GitOps/Production, leave 'create: false' and pre-create 'streaming-secrets' via kubectl.
+  create: false
+  existingSecretName: "streaming-secrets"
+
+services:
+  auth:
+    replicaCount: 1
+    image:
+      repository: streaming-auth
+      tag: v0.1.0
+      pullPolicy: IfNotPresent
+    port: 3001
+    probe:
+      path: /health
+      initialDelaySeconds: 5
+      periodSeconds: 10
+
+  streaming:
+    replicaCount: 1
+    image:
+      repository: streaming-streaming
+      tag: v0.1.0
+      pullPolicy: IfNotPresent
+    port: 3002
+    probe:
+      path: /api/health
+      initialDelaySeconds: 10
+      periodSeconds: 10
+
+  admin:
+    replicaCount: 1
+    image:
+      repository: streaming-admin
+      tag: v0.1.0
+      pullPolicy: IfNotPresent
+    port: 3003
+    probe:
+      path: /api/health
+      initialDelaySeconds: 10
+      periodSeconds: 10
+
+  chat:
+    replicaCount: 1
+    image:
+      repository: streaming-chat
+      tag: v0.1.0
+      pullPolicy: IfNotPresent
+    port: 3004
+    probe:
+      path: /api/health
+      initialDelaySeconds: 10
+      periodSeconds: 10
+
+  frontend:
+    replicaCount: 1
+    image:
+      repository: streaming-frontend
+      tag: v0.1.0
+      pullPolicy: IfNotPresent
+    port: 80
+    probe:
+      path: /
+      initialDelaySeconds: 5
+      periodSeconds: 10
+
+ingress:
+  enabled: true
+  className: "alb"
+  groupName: "streamingapp"
+  scheme: "internet-facing"
+  targetType: "ip"
+  idleTimeout: "60"
